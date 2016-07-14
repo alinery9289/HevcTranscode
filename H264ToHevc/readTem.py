@@ -40,7 +40,7 @@ def hd_to_4k_uploader(param_data,localfile,nametag):
         
 #         remotefile = ''.join(['storage/', newfileid,'.',localfile.split('.')[-1] ]) 
         
-        reg = re.compile(r'ftp://(((?P<remoteuser>[^ ]*):(?P<remotepasswod>[^ ]*)@){0,1}(?P<remoteip>(?<![0-9.])((2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})\.){3}(2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})(?![0-9.])):(?P<remoteport>[\d]{1,5})/){0,1}(.*?:.*?/){0,1}(?P<location>[\s\S]*)')
+        reg = re.compile(r'file://(((?P<remoteuser>[^ ]*):(?P<remotepasswod>[^ ]*)@){0,1}(?P<remoteip>(?<![0-9.])((2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})\.){3}(2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})(?![0-9.])):(?P<remoteport>[\d]{1,5})/){0,1}(.*?:.*?/){0,1}(?P<location>[\s\S]*)')
         regMatch = reg.match(param_data['before_file']['location'])
         linebits = regMatch.groupdict()       
         username = linebits['remoteuser'] if linebits['remoteuser']!=None else MyConfig.conf_dic['remoteftp']['username']
@@ -84,7 +84,7 @@ def hd_to_4k_downloader(param_data, file_tmp_name):
         if (os.path.exists(file_work_basepath)== False):    
             os.mkdir(file_work_basepath)
         
-        reg = re.compile(r'ftp://(((?P<remoteuser>[^ ]*):(?P<remotepasswod>[^ ]*)@){0,1}(?P<remoteip>(?<![0-9.])((2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})\.){3}(2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})(?![0-9.])):(?P<remoteport>[\d]{1,5})/){0,1}(.*?:.*?/){0,1}(?P<location>[\s\S]*)')
+        reg = re.compile(r'file://(((?P<remoteuser>[^ ]*):(?P<remotepasswod>[^ ]*)@){0,1}(?P<remoteip>(?<![0-9.])((2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})\.){3}(2[0-4][0-9]|25[0-5]|[01]?[0-9]{1,2})(?![0-9.])):(?P<remoteport>[\d]{1,5})/){0,1}(.*?:.*?/){0,1}(?P<location>[\s\S]*)')
         regMatch = reg.match(param_data['before_file']['location'])
         linebits = regMatch.groupdict()       
         username = linebits['remoteuser'] if linebits['remoteuser']!=None else MyConfig.conf_dic['remoteftp']['username']

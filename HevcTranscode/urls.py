@@ -35,7 +35,6 @@ urlpatterns = [
     url(r'^ftpmediafile/fileid/([a-zA-Z0-9]{32})/authcode/([a-zA-Z0-9]{32})$', 'H264ToHevc.views.ftpMediaFileByIdProc', name='ftpMediaFileByIdProc'),
     
     url(r'^TCT_CREATE$', 'H264ToHevc.views.tctcreate', name='TCT_CREATEProc'), 
-    url(r'^TCT_REPORT$', 'H264ToHevc.views.tctreport', name='TCT_REPORTProc'), 
     
     url(r'^h264tohevc$', 'H264ToHevc.views.H264toHevcProc', name='H264toHevcProc'), 
     url(r'^h264tohevc/allinfo/authcode/([a-zA-Z0-9]{32})$', 'H264ToHevc.views.H264toHevcInfoByAuthProc', name='H264toHevcInfoByAuthProc'),

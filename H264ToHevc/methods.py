@@ -52,48 +52,61 @@ def send_processlog_proc(taskid, out_list_param):
         res_complete= re.compile(r"[\s\S]*all complete[\s\S]*")
         status_json ={'cmd_code':'0x06010002','from':'MCU','to':'VML',
             'timestamp':datetime.now().strftime("%Y%m%d_%H%M%S"),
-            'task_list':{'task_id':taskid,
-                         'out_list':{"output_id": out_list_param["output_id"], 'progress_percent':'0.0%'}
-                    },
+            'task':{'task_id':taskid,'status':'1',"total_size":0,'err_code':'0','err_info':'',
+                          'out_list':[{'output_id': out_list_param["output_id"],'size':0,'status':'1','encode_desc':"4K", 'progress_percent':'0.0','err_code':'0','err_info':'','target_path':out_list_param["out_path"]}],},
             }
         while True:
             processlog=str(redistool.redis_get('_'.join(["task","status",taskid])))
+            #print "processlog:"+processlog
             if res_complete.match(processlog):
-                reg_percent ='100.0%'
+                status_json['task']['status']= '4'
+                status_json['task']['out_list'][0]['status']= '4'
+                status_json['task']['out_list'][0]['progress_percent']= '100.0'
+                #print 'progress_percent: '+reg_percent
+                http_post_progress(status_json,'/TCT_REPORT')
                 break
             elif res_schedule.match(processlog):
                 regMatch = res_schedule.match(processlog)
                 linebits = regMatch.groupdict()    
-                reg_percent = linebits['status_percent'] +'%' if linebits['status_percent']!='100.0' else '99.9%'
+                reg_percent = linebits['status_percent'] if linebits['status_percent']!='100.0' else '99.9'
+                status_json['task']['status']= '3'
+                status_json['task']['out_list'][0]['status']= '3'
             elif res_error.match(processlog):
-                reg_percent ='-1.0%'
+                status_json['task']['status']= '4'
+                status_json['task']['out_list'][0]['status']= '4'
+                status_json['task']['out_list'][0]['progress_percent']= '0.0'
+                status_json['task']['err_code']= '1'
+                status_json['task']['out_list'][0]['err_code']= '1'
+                #print 'progress_percent: '+reg_percent
+                http_post_progress(status_json,'/TCT_REPORT')
                 break
             else :
-                reg_percent ='0.1%'
-            status_json['task_list']['out_list']['progress_percent']= reg_percent
-            http_post(status_json)
-            time.sleep(1)
-        status_json['task_list']['out_list']['progress_percent']= reg_percent
-        http_post(status_json)
+                status_json['task']['status']= '1'
+                status_json['task']['out_list'][0]['status']= '1'
+                reg_percent ='0.1'
+            status_json['task']['out_list'][0]['progress_percent']= reg_percent
+            http_post_progress(status_json,'/TCT_REPORT')
+            #print 'progress_percent: '+reg_percent
+            time.sleep(5)
+        
     except Exception, e:
         print e
-def http_post(json_data):
+def http_post_progress(json_data,post_uri):
     client = None
     try:
         client = httplib.HTTPConnection(MainConf.main_conf_dic['vml']['ip'],MainConf.main_conf_dic['vml']['port'])
         headers = {"Content-type": "application/json" , "Accept": "text/json"}
         json_data = json.JSONEncoder().encode(json_data)
-        #params = urllib.urlencode({"filterparam": json_data}) 
-        client.request('POST','/TCT_REPORT',json_data, headers)
+        #params = urllib.urlencode({"filterparam": json_data})
+        client.request('POST',post_uri,json_data, headers)
         response = client.getresponse()
         result = response.read()
-        print result
-#         f = file('result.html','w')
-#         f.write(str(result))
-#         f.close()
+        #print result
+        f = file('C:\\Users\\Administrator\\Desktop\\send_result.html','w')
+        f.write(str(result))
+        f.close()
     except Exception, e:
         print e
-
 
 def handleAllUploadedFile(files,authcode):
     for f in files:

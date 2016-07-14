@@ -12,4 +12,3 @@ app = Celery('tasks', broker='amqp://'+MyConfig.conf_dic['rabbitmq']['user']+':'
 @app.task(name='tasks.ffmpeg_transcode')
 def ffmpeg_transcode(param_data):
     readTem.ffmpeg_transcode(param_data)
-

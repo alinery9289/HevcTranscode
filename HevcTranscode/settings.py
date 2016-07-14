@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
-# sys.path.append("C:\Transcode\Main\HevcTranscode\H264ToHevc") 
-sys.path.append("D:\Work\workspace\HevcTranscode\H264ToHevc") 
+sys.path.append("C:\Transcode\Main\HevcTranscode\H264ToHevc") 
+#sys.path.append("D:\Work\workspace\HevcTranscode\H264ToHevc") 
 import MainConf
 # from H264ToHevc import MainConf
 # import djcelery

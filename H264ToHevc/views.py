@@ -24,11 +24,15 @@ def tctcreate(request):
         return HttpResponse()
 #     filterparam = str( form.cleaned_data['filterparam'])
     filterparam_json = json.loads(request.body.encode("utf-8"), encoding="utf-8")
+    print filterparam_json
     #new var
     filePath = filterparam_json["task"]["in_uri"]
+    #new method add to file system
+    
+    #add media file
     fileid = str(uuid.uuid1()).replace('-','')
     filename = filePath.split('/')[-1] #filename in oursystem
-    filetype = filterparam_json["task"]["in_format"]
+    filetype = filterparam_json["task"]["in_format"].split('.')[-1]
     authcode = "38a43f8070e811e5ad0c90b11c94ab4d"
     oneFile = models.mediafile(fileid=fileid,filename=filename,authcode=authcode,filesize=0,location= filePath,filetype=filetype,uploadtime= datetime.now(),encodeinfo= ' ' )
     oneFile.save()
@@ -48,13 +52,13 @@ def tctcreate(request):
     json_tmp['filters']['ffmpeg']={}
     json_tmp['filters']['ffmpeg']['hevc_param']=hevc_param
     json_tmp['after_file']={}
-    json_tmp['after_file']['out_path']=str(filterparam_json["task"]["out_list"]["out_path"])
+    json_tmp['after_file']['out_path']='file://'+str(filterparam_json["task"]["out_list"][0]["out_path"])
     
     oneProcesslog = processlog(taskid=taskid, fileid=fileid,dealmethod="transcode",
                                controljson=json_tmp, dealstate="processing",dealtime= datetime.now())
     oneProcesslog.save()
     redistool.redis_set('_'.join(["task","status",taskid]), "Waiting to be processed...")
-    send_processlog(taskid,filterparam_json["task"]["out_list"])
+    send_processlog(taskid,filterparam_json["task"]["out_list"][0])
     tasks.ffmpeg_transcode.delay(json_tmp)
     json_ret = {}
     for name in ['cmd_code','from','to','timestamp']:
@@ -62,17 +66,10 @@ def tctcreate(request):
     ts = datetime.now()
     timeStr=ts.strftime("%Y%m%d_%H%M%S")
     json_ret['re_timestamp'] = timeStr
-    json_ret['err_code'] = ""
+    json_ret['err_code'] = "0"
     json_ret["err_info"] = ""
     return HttpResponse(json.dumps(json_ret))
 
-def tctreport(request):
-    if (request.method!='POST' ):
-        return HttpResponse()
-#     filterparam = str( form.cleaned_data['filterparam'])
-    filterparam_json = json.loads(request.body.encode("utf-8"), encoding="utf-8")
-    print filterparam_json
-    return HttpResponse('ok')
 
 def transcodePage(request):
     return render(request, 'transcode.html')

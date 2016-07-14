@@ -3,7 +3,7 @@ import os
 import ConfigParser
 
 #conf_file = os.getenv('DISTRIBUTED_TRANSCODER_CONF') + '\\conf.conf'
-conf_file = 'D:\\Work\\workspace\\HevcTranscode\\H264ToHevc\\Conf' + '\\mainConf.conf'
+conf_file = 'C:\\Transcode\\Main\\HevcTranscode\\H264ToHevc\\Conf' + '\\mainConf.conf'
 conf = ConfigParser.ConfigParser()
 conf.read(conf_file)
 

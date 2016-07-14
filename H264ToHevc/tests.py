@@ -1,6 +1,5 @@
 import tasks
-import methods
- 
+
 param_data = {
                 'taskid' : 'f92a30b0df8e11e59e1214187749d0b1', 
                 'before_file':{
@@ -15,10 +14,10 @@ param_data = {
                         'hd_to_4k_avs':{'resolution':'3840,2160'},
                         'hd_to_4k_bat':{'preset':'slow','keyint':'50' , 'scenecut':'50','bitrate':'15000'},
                     }
-                     
+                    
                 }
             }
- 
+
 param_data1 = {
                 'taskid' : 'f92a30b0df8e11e59e1214187749d0b1', 
                 'before_file':{
@@ -31,16 +30,13 @@ param_data1 = {
                     'ffmpeg':{
                         'hevc_param':{'keyfraemin':'50','keyframemax':'50','vbvmaxbitrate':'30000' , 'vbvbuffersize':'15000','bitrate':'15000'},
                     }
-                     
+                    
                 },
                'after_file':{
-                    'out_path' : 'ftp://user/download/1_265.mp4',
+                    'out_path' : 'ftp://user/upload/1_265.mp4',
                 }
             }
- 
+
 # tasks.hd_to_4k(param_data)
 # tasks.ffmpeg_transcode(param_data1)
-if __name__ == '__main__':
-    methods.send_processlog('000000001',{'output_id':'0'})
-    print 'ok'
-# print "do the transcode task"
+print "do the transcode task"
